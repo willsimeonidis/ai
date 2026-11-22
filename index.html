@@ -75,8 +75,8 @@
       <button class="send" id="btn" type="button" onclick="send()">Send ⚡</button>
     </div>
   </div>
-  <script>
-    const URL = "https://mute-tooth-d318.will-simeonidis.workers.dev";
+   <script>
+    const RELAY_URL = "https://workers.dev";
     const chat = document.getElementById("chat"), inp = document.getElementById("inp"), btn = document.getElementById("btn");
     let hist = [];
     inp.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
@@ -97,12 +97,14 @@
       chat.scrollTop = chat.scrollHeight;
       hist.push({ role: "user", content: txt });
       try {
-        const res = await fetch(URL, {
+        const res = await fetch(RELAY_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ model: "llama-3.1-8b-instant", messages: [{ role: "system", content: "You are a fast, detailed tutor." }, ...hist], max_tokens: 2048 })
         });
-        const data = await res.json();
+        const raw = await res.text();
+        let data;
+        try { data = JSON.parse(raw); } catch { throw new Error("HTTP " + res.status + ": " + (raw || "Empty reply")); }
         if (!res.ok) throw new Error(data.error?.message || "HTTP " + res.status);
         const reply = data.choices?.at(0)?.message?.content;
         if (!reply) a.textContent = "⚠️ No reply received.";
