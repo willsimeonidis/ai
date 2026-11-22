@@ -9,249 +9,107 @@
     body {
       background: linear-gradient(-45deg, #060812, #150b30, #081e36, #1f0a2e);
       background-size: 400% 400%;
-      animation: bgShift 12s ease infinite;
+      animation: bg 12s ease infinite;
       color: #f8fafc;
       display: flex;
       flex-direction: column;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
-    @keyframes bgShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes bg { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .45; pointer-events: none; animation: orb 10s infinite alternate ease-in-out; }
+    .o1 { width: 350px; height: 350px; background: #a855f7; top: -80px; left: -80px; }
+    .o2 { width: 320px; height: 320px; background: #06b6d4; bottom: -80px; right: -60px; animation-delay: -3s; }
+    .o3 { width: 240px; height: 240px; background: #ec4899; top: 40%; left: 45%; animation-delay: -6s; }
+    @keyframes orb { to { transform: translate(40px, -35px) scale(1.15); } }
+    .top {
+      z-index: 2; height: 58px; background: rgba(15,23,42,.75); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(168,85,247,.4); padding: 0 20px; display: flex; align-items: center; justify-content: space-between;
     }
-    .topbar {
-      height: 60px;
-      background: rgba(15, 23, 42, 0.78);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(168, 85, 247, 0.4);
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .bin {
+      background: rgba(255,255,255,.08); border: 1px solid rgba(168,85,247,.4); color: #fff;
+      padding: 7px 13px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: .2s;
     }
-    .bin-btn {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: white;
-      padding: 8px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .bin-btn:hover { background: #ef4444; transform: scale(1.1) rotate(-8deg); }
-    .title-glow {
-      font-weight: 900;
-      font-size: 1.25rem;
+    .bin:hover { background: #ef4444; transform: scale(1.12) rotate(-8deg); box-shadow: 0 0 16px #ef4444; }
+    .title {
+      font-weight: 900; font-size: 1.25rem;
       background: linear-gradient(90deg, #06b6d4, #a855f7, #ec4899, #06b6d4);
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: textShimmer 4s linear infinite;
+      background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shim 4s linear infinite;
     }
-    @keyframes textShimmer {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-    .chat-box {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-width: 900px;
-      width: 100%;
-      margin: 0 auto;
-    }
-    .msg {
-      max-width: 82%;
-      padding: 14px 18px;
-      border-radius: 16px;
-      line-height: 1.55;
-      font-size: 0.96rem;
-      word-wrap: break-word;
-      animation: popIn 0.3s ease forwards;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .msg.user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, #4f46e5, #9333ea, #db2777);
-      white-space: pre-wrap;
-    }
-    .msg.ai {
-      align-self: flex-start;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(168, 85, 247, 0.35);
-    }
-    .msg.ai pre {
-      background: #050811;
-      padding: 10px;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 8px 0;
-    }
-    .input-wrapper {
-      background: rgba(15, 23, 42, 0.8);
-      border-top: 1px solid rgba(168, 85, 247, 0.4);
-      padding: 14px 20px;
-    }
-    .input-area {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      gap: 10px;
-    }
-    textarea {
-      flex: 1;
-      resize: none;
-      height: 50px;
-      background: #090d1a;
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: white;
-      padding: 12px 14px;
-      border-radius: 12px;
-      font-size: 0.96rem;
-      outline: none;
-    }
-    textarea:focus { border-color: #06b6d4; box-shadow: 0 0 14px rgba(6, 182, 212, 0.4); }
-    .send-btn {
-      background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899);
-      color: white;
-      border: none;
-      padding: 0 24px;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      height: 50px;
-    }
-    .send-btn:disabled { opacity: 0.5; }
+    @keyframes shim { to { background-position: 100% 50%; } }
+    .chat { z-index: 2; flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; max-width: 900px; width: 100%; margin: 0 auto; }
+    .msg { max-width: 82%; padding: 13px 17px; border-radius: 16px; line-height: 1.55; word-wrap: break-word; animation: pop .3s ease forwards; box-shadow: 0 8px 22px rgba(0,0,0,.3); }
+    @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: none; } }
+    .user { align-self: flex-end; background: linear-gradient(135deg, #4f46e5, #9333ea, #db2777); white-space: pre-wrap; }
+    .ai { align-self: flex-start; background: rgba(15,23,42,.78); backdrop-filter: blur(12px); border: 1px solid rgba(168,85,247,.38); }
+    .ai pre { background: #050811; padding: 10px; border-radius: 8px; overflow-x: auto; margin: 8px 0; border: 1px solid rgba(6,182,212,.35); }
+    .ai code { font-family: monospace; color: #67e8f9; }
+    .dots { display: flex; gap: 5px; height: 18px; align-items: center; }
+    .dots span { width: 8px; height: 8px; border-radius: 50%; animation: dot 1.2s infinite ease-in-out both; }
+    .dots span:nth-child(1) { background: #06b6d4; animation-delay: -.32s; }
+    .dots span:nth-child(2) { background: #a855f7; animation-delay: -.16s; }
+    .dots span:nth-child(3) { background: #ec4899; }
+    @keyframes dot { 0%,80%,100% { transform: scale(.3); opacity: .5; } 40% { transform: scale(1.1); opacity: 1; } }
+    .bar { z-index: 2; background: rgba(15,23,42,.78); backdrop-filter: blur(14px); border-top: 1px solid rgba(168,85,247,.4); padding: 14px 20px; }
+    .row { max-width: 900px; margin: 0 auto; display: flex; gap: 10px; }
+    textarea { flex: 1; resize: none; height: 50px; background: #090d1a; border: 1px solid rgba(168,85,247,.4); color: #fff; padding: 12px 14px; border-radius: 12px; font-size: .96rem; outline: none; }
+    textarea:focus { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6,182,212,.45); }
+    .send { background: linear-gradient(135deg, #06b6d4, #8b5cf6, #ec4899); color: #fff; border: none; padding: 0 24px; border-radius: 12px; font-weight: 700; cursor: pointer; height: 50px; transition: .2s; }
+    .send:hover:not(:disabled) { transform: translateY(-2px) scale(1.04); box-shadow: 0 0 20px rgba(6,182,212,.75); }
+    .send:disabled { opacity: .5; }
   </style>
 </head>
 <body>
-
-  <div class="topbar">
-    <button class="bin-btn" type="button" onclick="clearChat()">🗑️</button>
-    <div class="title-glow">awa stinks</div>
-    <div style="width: 44px;"></div>
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="top">
+    <button class="bin" type="button" onclick="clearChat()">🗑️</button>
+    <div class="title">awa stinks</div>
+    <div style="width:42px"></div>
   </div>
-
-  <div class="chat-box" id="chatBox">
-    <div class="msg ai" id="bootMsg">Loading script...</div>
-  </div>
-
-  <div class="input-wrapper">
-    <div class="input-area">
-      <textarea id="userInput" placeholder="Type here and press Enter..."></textarea>
-      <button class="send-btn" id="sendBtn" type="button" onclick="sendMessage()">Send ⚡</button>
+  <div class="chat" id="chat"><div class="msg ai">✅ <strong>Ready!</strong> Type anything and press <strong>Enter</strong>.</div></div>
+  <div class="bar">
+    <div class="row">
+      <textarea id="inp" placeholder="Ask anything... (Enter to send)"></textarea>
+      <button class="send" id="btn" type="button" onclick="send()">Send ⚡</button>
     </div>
   </div>
-
   <script>
-    // ONLY replace the text inside the quotes on PART_1 and PART_2. DO NOT touch line 3!
-    const PART_1 = "gsk_vW8r3xgPc6w3HtlEgO0cWGdyb3";
-    const PART_2 = "FYkcnKEgmgWn6wLW7bBx6Zuw7d";
-    const API_KEY = PART_1 + PART_2;
-
-    const chatBox = document.getElementById("chatBox");
-    const userInput = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const bootMsg = document.getElementById("bootMsg");
-
-    // Immediately verify script loaded & check key format
-    if (API_KEY.includes("PASTE_")) {
-      bootMsg.innerHTML = "⚠️ <strong>Script works!</strong> Now paste your Groq key halves into <code>PART_1</code> and <code>PART_2</code> on GitHub.";
-    } else {
-      bootMsg.innerHTML = "✅ <strong>Ready!</strong> Type a message and press <strong>Enter</strong>.";
+    const URL = "https://mute-tooth-d318.will-simeonidis.workers.dev";
+    const chat = document.getElementById("chat"), inp = document.getElementById("inp"), btn = document.getElementById("btn");
+    let hist = [];
+    inp.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+    function clearChat() { hist = []; chat.innerHTML = '<div class="msg ai">Chat cleared!</div>'; }
+    function fmt(t) {
+      const k = String.fromCharCode(96), kk = k + k + k;
+      return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+        .replace(new RegExp(kk+"(\\w*)\\n([\\s\\S]*?)"+kk,"g"),"<pre><code>$2</code></pre>")
+        .replace(new RegExp(k+"([^"+k+"]+)"+k,"g"),"<code>$1</code>")
+        .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>");
     }
-
-    // Enter sends message, Shift+Enter makes a new line
-    userInput.addEventListener("keydown", function(e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-
-    let conversationHistory = [];
-
-    function clearChat() {
-      conversationHistory = [];
-      chatBox.innerHTML = '<div class="msg ai">Chat cleared!</div>';
-    }
-
-    function formatText(text) {
-      return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/\n/g, "<br>");
-    }
-
-    async function sendMessage() {
-      const text = userInput.value.trim();
-      if (!text || sendBtn.disabled) return;
-
-      userInput.value = "";
-      sendBtn.disabled = true;
-
-      const userDiv = document.createElement("div");
-      userDiv.className = "msg user";
-      userDiv.textContent = text;
-      chatBox.appendChild(userDiv);
-
-      const aiDiv = document.createElement("div");
-      aiDiv.className = "msg ai";
-      aiDiv.textContent = "Thinking...";
-      chatBox.appendChild(aiDiv);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      conversationHistory.push({ role: "user", content: text });
-
+    async function send() {
+      const txt = inp.value.trim();
+      if (!txt || btn.disabled) return;
+      inp.value = ""; btn.disabled = true;
+      const u = document.createElement("div"); u.className = "msg user"; u.textContent = txt; chat.appendChild(u);
+      const a = document.createElement("div"); a.className = "msg ai"; a.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>'; chat.appendChild(a);
+      chat.scrollTop = chat.scrollHeight;
+      hist.push({ role: "user", content: txt });
       try {
-        const res = await fetch("https://groq.com", {
+        const res = await fetch(URL, {
           method: "POST",
-          headers: {
-            "Authorization": "Bearer " + API_KEY,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
-            messages: [
-              { role: "system", content: "You are a fast, helpful tutor. Give clear, detailed explanations." },
-              ...conversationHistory
-            ],
-            max_tokens: 2048
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model: "llama-3.1-8b-instant", messages: [{ role: "system", content: "You are a fast, detailed tutor." }, ...hist], max_tokens: 2048 })
         });
-
         const data = await res.json();
-        if (!res.ok) {
-          throw new Error((data.error && data.error.message) || ("HTTP " + res.status));
-        }
-
-        const firstChoice = data.choices && data.choices.at(0);
-        const reply = firstChoice && firstChoice.message && firstChoice.message.content;
-
-        if (!reply) {
-          aiDiv.textContent = "⚠️ No text returned from Groq.";
-        } else {
-          aiDiv.innerHTML = formatText(reply);
-          conversationHistory.push({ role: "assistant", content: reply });
-        }
-      } catch (err) {
-        aiDiv.innerHTML = '<span style="color:#f87171;"><strong>Error:</strong> ' + err.message + '</span>';
-      } finally {
-        sendBtn.disabled = false;
-        chatBox.scrollTop = chatBox.scrollHeight;
-        userInput.focus();
-      }
+        if (!res.ok) throw new Error(data.error?.message || "HTTP " + res.status);
+        const reply = data.choices?.at(0)?.message?.content;
+        if (!reply) a.textContent = "⚠️ No reply received.";
+        else { a.innerHTML = fmt(reply); hist.push({ role: "assistant", content: reply }); }
+      } catch (e) {
+        a.innerHTML = '<span style="color:#f87171"><strong>Error:</strong> ' + e.message + '</span>';
+      } finally { btn.disabled = false; chat.scrollTop = chat.scrollHeight; inp.focus(); }
     }
   </script>
 </body>
