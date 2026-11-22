@@ -13,7 +13,6 @@
       --neon-purple: #a855f7;
       --neon-cyan: #06b6d4;
       --neon-pink: #ec4899;
-      --neon-blue: #3b82f6;
     }
 
     * {
@@ -41,7 +40,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Floating Neon Background Orbs */
     .bg-orb {
       position: absolute;
       border-radius: 50%;
@@ -51,29 +49,9 @@
       pointer-events: none;
       animation: floatOrb 12s infinite alternate ease-in-out;
     }
-    .orb-1 {
-      width: 400px;
-      height: 400px;
-      background: var(--neon-purple);
-      top: -90px;
-      left: -90px;
-    }
-    .orb-2 {
-      width: 360px;
-      height: 360px;
-      background: var(--neon-cyan);
-      bottom: -90px;
-      right: -70px;
-      animation-delay: -4s;
-    }
-    .orb-3 {
-      width: 280px;
-      height: 280px;
-      background: var(--neon-pink);
-      top: 42%;
-      left: 48%;
-      animation-delay: -8s;
-    }
+    .orb-1 { width: 400px; height: 400px; background: var(--neon-purple); top: -90px; left: -90px; }
+    .orb-2 { width: 360px; height: 360px; background: var(--neon-cyan); bottom: -90px; right: -70px; animation-delay: -4s; }
+    .orb-3 { width: 280px; height: 280px; background: var(--neon-pink); top: 42%; left: 48%; animation-delay: -8s; }
 
     @keyframes floatOrb {
       0% { transform: translate(0, 0) scale(1); }
@@ -81,7 +59,6 @@
       100% { transform: translate(-35px, 45px) scale(0.92); }
     }
 
-    /* Top Header Bar */
     .topbar {
       position: relative;
       z-index: 2;
@@ -113,9 +90,7 @@
       transform: scale(1.14) rotate(-10deg);
       box-shadow: 0 0 20px rgba(239, 68, 68, 0.75);
     }
-    .bin-btn:active {
-      transform: scale(0.9);
-    }
+    .bin-btn:active { transform: scale(0.9); }
 
     .title-glow {
       font-weight: 900;
@@ -134,7 +109,6 @@
       100% { background-position: 100% 50%; }
     }
 
-    /* Main Chat Area */
     .chat-box {
       position: relative;
       z-index: 2;
@@ -156,7 +130,6 @@
       border-radius: 10px;
     }
 
-    /* Chat Bubbles with Spring Animation */
     .msg {
       max-width: 82%;
       padding: 14px 18px;
@@ -191,11 +164,7 @@
       border-bottom-left-radius: 4px;
     }
 
-    .msg.ai h3 {
-      margin: 12px 0 6px;
-      color: #38bdf8;
-      font-size: 1.06rem;
-    }
+    .msg.ai h3 { margin: 12px 0 6px; color: #38bdf8; font-size: 1.06rem; }
     .msg.ai pre {
       background: rgba(5, 8, 17, 0.92);
       padding: 12px;
@@ -212,13 +181,8 @@
       border-radius: 5px;
       color: #67e8f9;
     }
-    .msg.ai pre code {
-      padding: 0;
-      background: transparent;
-      color: #e2e8f0;
-    }
+    .msg.ai pre code { padding: 0; background: transparent; color: #e2e8f0; }
 
-    /* Bouncing Neon Typing Dots */
     .typing-dots {
       display: flex;
       align-items: center;
@@ -244,7 +208,6 @@
       40% { transform: scale(1.1); opacity: 1; }
     }
 
-    /* Bottom Input Bar */
     .input-wrapper {
       position: relative;
       z-index: 2;
@@ -302,44 +265,34 @@
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 0 26px rgba(6, 182, 212, 0.8);
     }
-    .send-btn:active:not(:disabled) {
-      transform: scale(0.94);
-    }
-    .send-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    .send-btn:active:not(:disabled) { transform: scale(0.94); }
+    .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
-  <!-- Floating Animated Neon Orbs -->
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-orb orb-3"></div>
 
-  <!-- Top Bar with Trash Bin & Title -->
   <div class="topbar">
-    <button class="bin-btn" id="clearBtn" type="button" title="Clear Chat">🗑️</button>
+    <button class="bin-btn" id="clearBtn" type="button" onclick="clearChat()" title="Clear Chat">🗑️</button>
     <div class="title-glow">awa stinks</div>
     <div style="width: 44px;"></div>
   </div>
 
-  <!-- Chat Messages Container -->
   <div class="chat-box" id="chatBox">
     <div class="msg ai">Ready! Type anything below and hit <strong>Enter</strong>.</div>
   </div>
 
-  <!-- Bottom Input Box -->
   <div class="input-wrapper">
-    <div class="input-area">
-      <textarea id="userInput" placeholder="Ask anything... (Enter to send, Shift+Enter for new line)"></textarea>
-      <button class="send-btn" id="sendBtn" type="button">Send ⚡</button>
-    </div>
+    <form class="input-area" onsubmit="event.preventDefault(); sendMessage();">
+      <textarea id="userInput" placeholder="Ask anything... (Enter to send, Shift+Enter for new line)" onkeydown="if(event.key==='Enter' && !event.shiftKey){ event.preventDefault(); sendMessage(); }"></textarea>
+      <button class="send-btn" id="sendBtn" type="submit">Send ⚡</button>
+    </form>
   </div>
 
   <script>
-    // Paste your NEW Groq API key split into 2 halves below:
     const PART_1 = "gsk_vW8r3xgPc6w3HtlEgO0cWGdyb3";
     const PART_2 = "FYkcnKEgmgWn6wLW7bBx6Zuw7d";
     const API_KEY = PART_1 + PART_2;
@@ -349,7 +302,6 @@
     const chatBox = document.getElementById("chatBox");
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
-    const clearBtn = document.getElementById("clearBtn");
 
     let conversationHistory = [];
 
@@ -359,29 +311,24 @@
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-const codeBlockRegex = new RegExp("\x60\x60\x60(\w*)\n([\s\S]*?)\x60\x60\x60", "g");
-const inlineCodeRegex = new RegExp("\x60([^\x60]+)\x60", "g");
-html = html.replace(codeBlockRegex, "$2");
-html = html.replace(inlineCodeRegex, "$1");
-html = html.replace(/^### (.$)/gm, "$1");
-html = html.replace(/^## (.$)/gm, "$1");
-html = html.replace(/**(.*?)**/g, "$1");
+      const tick = String.fromCharCode(96);
+      const tripleTick = tick + tick + tick;
+      const codeBlockRegex = new RegExp(tripleTick + "(\\w*)\\n([\\s\\S]*?)" + tripleTick, "g");
+      const inlineCodeRegex = new RegExp(tick + "([^" + tick + "]+)" + tick, "g");
+
+      html = html.replace(codeBlockRegex, "<pre><code>$2</code></pre>");
+      html = html.replace(inlineCodeRegex, "<code>$1</code>");
+      html = html.replace(/^### (.*$)/gm, "<h3>$1</h3>");
+      html = html.replace(/^## (.*$)/gm, "<h3>$1</h3>");
+      html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 html = html.replace(/\n/g, "
 ");
 return html;
 }
-// Pressing Enter sends immediately; Shift+Enter adds a new line
-userInput.addEventListener("keydown", function(e) {
-if (e.key === "Enter" && !e.shiftKey) {
-e.preventDefault();
-sendMessage();
-}
-});
-sendBtn.addEventListener("click", sendMessage);
-clearBtn.addEventListener("click", function() {
+function clearChat() {
 conversationHistory = [];
 chatBox.innerHTML = 'Chat cleared! What is next?';
-});
+}
 function appendMessage(role, htmlContent) {
 const div = document.createElement("div");
 div.className = "msg " + role;
@@ -441,8 +388,8 @@ const dataStr = trimmed.slice(6);
 if (dataStr === "[DONE]") break;
 try {
 const parsed = JSON.parse(dataStr);
-const choice = parsed.choices && parsed.choices[0];
-const token = (choice && choice.delta && choice.delta.content) || "";
+const firstChoice = parsed.choices && parsed.choices.at(0);
+const token = (firstChoice && firstChoice.delta && firstChoice.delta.content) || "";
 if (token) {
 fullResponse += token;
 aiMsgDiv.innerHTML = formatText(fullResponse);
