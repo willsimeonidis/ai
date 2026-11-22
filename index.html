@@ -162,7 +162,7 @@
       const raw=inp.value.trim(); if(!raw||pbtn.disabled||sbtn.disabled)return;
       pbtn.disabled=true; pbtn.textContent="Upgrading...";
       try{
-        const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:"Rewrite the user's rough prompt into a crystal-clear, detailed prompt that gets the best possible AI answer. Return ONLY the improved prompt text."},{role:"user",content:raw}],max_tokens:400,temperature:.4})});
+        const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({messages:[{role:"system",content:"Rewrite the user's rough prompt into a crystal-clear, detailed prompt that gets the best possible AI answer. Return ONLY the improved prompt text."},{role:"user",content:raw}],max_tokens:400,temperature:.4})});
         const d=await r.json(); if(d.reply){ inp.value=d.reply.trim(); ccnt.textContent=inp.value.length+" chars • Upgraded"; }
       }catch(e){} finally{ pbtn.disabled=false; pbtn.textContent="✨ Upgrade Prompt"; inp.focus(); }
     }
@@ -174,7 +174,7 @@
       box.appendChild(lw); box.scrollTop=box.scrollHeight;
       const cf=cfg();
       try{
-        const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:cf.prompt},...c.messages],max_tokens:cf.max_tokens,temperature:cf.temperature})});
+        const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({messages:[{role:"system",content:cf.prompt},...c.messages],max_tokens:cf.max_tokens,temperature:cf.temperature})});
         const raw=await r.text(); let d;
         try{d=JSON.parse(raw);}catch{throw new Error("HTTP "+r.status+": "+(raw||"Empty reply"));}
         if(!r.ok)throw new Error(d.error?.message||"HTTP "+r.status);
