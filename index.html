@@ -1,28 +1,11 @@
-export default {
-  async fetch(request, env) {
-    if (request.method === "POST") {
-      try {
-        if (!env.AI) return new Response(JSON.stringify({ error: { message: "Add Workers AI binding 'AI' in Settings." } }), { status: 400, headers: { "Content-Type": "application/json" } });
-        const p = await request.json();
-        const res = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
-          messages: p.messages,
-          max_tokens: p.max_tokens || 2048,
-          temperature: p.temperature ?? 0.65
-        });
-        return new Response(JSON.stringify({ reply: res.response }), { status: 200, headers: { "Content-Type": "application/json" } });
-      } catch (e) {
-        return new Response(JSON.stringify({ error: { message: e.message } }), { status: 500, headers: { "Content-Type": "application/json" } });
-      }
-    }
-
-    const html = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>awa stinks</title>
   <style>
-    :root { --bg:#07070a; --s1:#101016; --s2:#181822; --bd:#282836; --gold:#eab308; --gdark:#b45309; --glow:rgba(234,179,8,.22); --txt:#f4f4f6; --mut:#9ca3af; }
+    :root { --bg:#07070a; --s1:#101016; --s2:#181822; --bd:#282836; --gold:#eab308; --glow:rgba(234,179,8,.22); --txt:#f4f4f6; --mut:#9ca3af; }
     * { box-sizing:border-box; margin:0; padding:0; font-family:system-ui,-apple-system,sans-serif; scrollbar-width:none; -ms-overflow-style:none; }
     *::-webkit-scrollbar { display:none; width:0; height:0; }
     body { background:var(--bg); color:var(--txt); display:flex; height:100vh; overflow:hidden; font-size:16px; }
@@ -119,24 +102,24 @@ export default {
     </div>
   </div>
   <script>
-    const KEY="awa_ws_v1", MAX=5;
+    const API_URL="https://workers.dev", KEY="awa_ws_v1", MAX=5;
     const side=document.getElementById("side"), clist=document.getElementById("clist"), scnt=document.getElementById("scnt"), nbtn=document.getElementById("nbtn"), box=document.getElementById("box"), inp=document.getElementById("inp"), sbtn=document.getElementById("sbtn"), pbtn=document.getElementById("pbtn"), mode=document.getElementById("mode"), ccnt=document.getElementById("ccnt");
     let st=JSON.parse(localStorage.getItem(KEY)||"null")||{activeId:"c1",chats:[{id:"c1",title:"Workspace 1",messages:[]}]};
     const save=()=>localStorage.setItem(KEY,JSON.stringify(st));
     const cur=()=>st.chats.find(c=>c.id===st.activeId)||st.chats.at(0);
     const toggleSide=()=>side.classList.toggle("hide");
     function newChat(){ if(st.chats.length>=MAX)return; const id="c"+Date.now(); st.chats.unshift({id,title:"New Chat",messages:[]}); st.activeId=id; save(); render(); }
-function swChat(id){ st.activeId=id; save(); render(); }
-function delChat(e,id){ e.stopPropagation(); st.chats=st.chats.filter(c=>c.id!==id); if(!st.chats.length)st.chats.push({id:"c"+Date.now(),title:"Workspace 1",messages:[]}); if(!st.chats.some(c=>c.id===st.activeId))st.activeId=st.chats.at(0).id; save(); render(); }
-function clearChat(){ const c=cur(); c.messages=[]; c.title="Cleared Chat"; save(); render(); }
-const esc=s=>s.replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">");
-function fmt(t){
-const k=String.fromCharCode(96), kk=k+k+k;
-return esc(t)
-.replace(new RegExp(kk+"(\\w*)\\n([\\s\\S]?)"+kk,"g"),(_,l,c)=>'Copy'+c+'')
+    function swChat(id){ st.activeId=id; save(); render(); }
+    function delChat(e,id){ e.stopPropagation(); st.chats=st.chats.filter(c=>c.id!==id); if(!st.chats.length)st.chats.push({id:"c"+Date.now(),title:"Workspace 1",messages:[]}); if(!st.chats.some(c=>c.id===st.activeId))st.activeId=st.chats.at(0).id; save(); render(); }
+    function clearChat(){ const c=cur(); c.messages=[]; c.title="Cleared Chat"; save(); render(); }
+    const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    function fmt(t){
+      const k=String.fromCharCode(96), kk=k+k+k;
+      return esc(t)
+        .replace(new RegExp(kk+"(\\w*)\\n([\\s\\S]*?)"+kk,"g"),(_,l,c)=>'<pre><button class="ccode" type="button" onclick="cpCode(this)">Copy</button><code>'+c+'</code></pre>')
 .replace(new RegExp(k+"([^"+k+"]+)"+k,"g"),"$1")
 .replace(/^### (.$)/gm,"$1").replace(/^## (.$)/gm,"$1")
-.replace(/\\(.?)\\/g,"$1").replace(/\n/g,"
+.replace(/**(.*?)**/g,"$1").replace(/\n/g,"
 ");
 }
 function cpCode(b){ navigator.clipboard.writeText(b.nextElementSibling.innerText); b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy",1400); }
@@ -176,7 +159,7 @@ async function polish(){
 const raw=inp.value.trim(); if(!raw||pbtn.disabled||sbtn.disabled)return;
 pbtn.disabled=true; pbtn.textContent="Upgrading...";
 try{
-const r=await fetch(window.location.href,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:"Rewrite the user's rough prompt into a crystal-clear, detailed prompt that gets the best possible AI answer. Return ONLY the improved prompt text."},{role:"user",content:raw}],max_tokens:400,temperature:.4})});
+const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:"Rewrite the user's rough prompt into a crystal-clear, detailed prompt that gets the best possible AI answer. Return ONLY the improved prompt text."},{role:"user",content:raw}],max_tokens:400,temperature:.4})});
 const d=await r.json(); if(d.reply){ inp.value=d.reply.trim(); ccnt.textContent=inp.value.length+" chars • Upgraded"; }
 }catch(e){} finally{ pbtn.disabled=false; pbtn.textContent="✨ Upgrade Prompt"; inp.focus(); }
 }
@@ -188,7 +171,7 @@ const lw=document.createElement("div"); lw.className="wrap ai"; lw.innerHTML='Ge
 box.appendChild(lw); box.scrollTop=box.scrollHeight;
 const cf=cfg();
 try{
-const r=await fetch(window.location.href,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:cf.prompt},...c.messages],max_tokens:cf.max_tokens,temperature:cf.temperature})});
+const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[{role:"system",content:cf.prompt},...c.messages],max_tokens:cf.max_tokens,temperature:cf.temperature})});
 const raw=await r.text(); let d;
 try{d=JSON.parse(raw);}catch{throw new Error("HTTP "+r.status+": "+(raw||"Empty reply"));}
 if(!r.ok)throw new Error(d.error?.message||"HTTP "+r.status);
@@ -199,9 +182,3 @@ finally{ sbtn.disabled=false; save(); render(); inp.focus(); }
 inp.addEventListener("input",()=>{ ccnt.textContent=inp.value.length+" chars • Saved locally"; });
 inp.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); send(); } });
 render();
-
-
-`;
-return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
-}
-};
